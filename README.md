@@ -15,24 +15,28 @@ see flow in flow folder.
 bind mount the repo folder to kestra so that it could see the code and files needed. 
 or you can manually import all files from code folder and file folder to kestra.
 
-step 1, setup google cloud information as in the vedio. 
-    flow gcp_ kv and gcp_setup are not uploaded in this repo. 
-step 2, run update_stock_price_schedule.yaml in kestra. 
-    the flow will update stock adjusted close price from yahoo finance for nasdaq 100 companies. scheduled monthly
-step 3, run xbrl_pipeline.yaml in kestra.
-    the flow will load xbrl data from yahoo finance to bigquery tables. 
-step 4, run company_public_filing_business_section.yaml in kestra. 
-    the flow will ask input of ticker, file type and a word of interest. 
+### step 1, setup google cloud information as instructed.   
+    (https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/02-workflow-orchestration/flows/05_gcp_setup.yaml)
+    gcp_kv and gcp_setup are not uploaded to this repo. but it will needed to run other flow. 
+    setup google credentials in kv store. my key is called GCP_SERVICE_ACCOUNT in flows. changed that in other flow if needed. 
+### step 2, run update_stock_price_schedule.yaml in kestra.    
+    the flow will update stock adjusted close price from yahoo finance for nasdaq 100 companies. scheduled monthly   
+### step 3, run xbrl_pipeline.yaml in kestra.   
+    the flow will load xbrl data from yahoo finance to bigquery tables.    
+### step 4, run company_public_filing_business_section.yaml in kestra.    
+    in file business_overview_v3.py an file public_company_filing_business_section.yaml, please change the header to your information.    
+    the flow will ask input of ticker, file type and a word of interest.    
     and it will extract business section of recent 10K filing into gcs, and count the total word/word of interest in file. 
-    Note: 1, there are some companies that do not have 10K filings because they are foriegn companies. 
-        2, there are a few companies, their filing does not include index in html. I ignore thoes companies for now. 
-            will be updated to extract from pure text.
-        3, this is expandable to 10q file, md&a part. will be updated to include that.
-step 5, iterate all tickers from nasdaq companies
-    manually load nasdaq100ticker list into google cloud storage to convert to bigquery table.
+    counting one word of interest is to setup table schema in bigquery. will count other words in other python script.   
+    Note: 1, there are some companies that do not have 10K filings because they are foriegn companies.    
+        2, there are a few companies, their filing does not include index in html. I ignore thoes companies for now.    
+            will be updated to extract from pure text.   
+        3, this is expandable to 10q file, md&a part. will be updated to include that.   
+### step 5, iterate all tickers from nasdaq companies   
+    manually load nasdaq100ticker list into google cloud storage to convert to bigquery table.   
     the flow will iterate over tickers read from nasdaq100.csv file as input and run subflow company_public_filing_business_section
-    if CPU consumption is overwhelming, run in chunk
-further step, add scripts to extract other word of interest from 10K business section. 
+    if CPU consumption is overwhelming, run in chunk   
+further step, add scripts to extract other word of interest from 10K business section.    
 
 ## dlt
 xbrl_pipeline.yaml running xbrl_pipeline.py which using dlt to load data from yahoo finance api to bigquery tables. 
