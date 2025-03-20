@@ -29,6 +29,7 @@ step 4, run company_public_filing_business_section.yaml in kestra.
             will be updated to extract from pure text.
         3, this is expandable to 10q file, md&a part. will be updated to include that.
 step 5, iterate all tickers from nasdaq companies
+    manually load nasdaq100ticker list into google cloud storage to convert to bigquery table.
     the flow will iterate over tickers read from nasdaq100.csv file as input and run subflow company_public_filing_business_section
     if CPU consumption is overwhelming, run in chunk
 further step, add scripts to extract other word of interest from 10K business section. 
