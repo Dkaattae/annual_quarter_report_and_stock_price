@@ -105,4 +105,4 @@ pluginDefaults:
 triggers:
   - id: stock_price_schedule
     type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 16 1 
+    cron: "0 16 1 * *"
