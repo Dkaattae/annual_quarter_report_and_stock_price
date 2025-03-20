@@ -1,0 +1,93 @@
+version: 2
+
+sources:
+  - name: staging
+    database: "{{ env_var('DBT_DATABASE'), 'edgar-data-pipeline'}}"
+    schema: "{{ env_var('DBT_SCHEMA', 'edgar_data')}}"
+    tables:
+      - name: stock_price
+      - name: index_price
+      - name: company_info
+      - name: financial_statement
+      - name: cashflow
+
+models:
+  - name: stg_stock_return
+    description: >
+      stock return
+    columns:
+      - name: ticker
+        description: stock ticker from yahoo finance
+        test:
+          - not_null:
+              severity: warn
+      - name: date
+        description: trading date 
+        test:
+          - not_null:
+              severity: warn
+      - name: price
+        description: adjusted close price in date 
+      - name: yesterday_price
+        description: last trading day's adjusted close price. 
+      - name: stock_return
+        description: simple return calculated from price and yesterday_price
+
+  
+  - name: stg_index_return
+    description: >
+      sp500 return
+    columns:
+      - name: ticker
+        description: replaced '^GSPC' with 'SPX'
+        test:
+          - not_null:
+              severity: warn
+      - name: date
+        description: trading date 
+        test:
+          - not_null:
+              severity: warn
+      - name: price
+        description: adjusted close price in date 
+      - name: yesterday_price
+        description: last trading day's adjusted close price. 
+      - name: index_return
+        description: simple return calculated from price and yesterday_price
+
+  - name: stg_company_info
+    description: >
+      company info 
+    columns:
+      - name: ticker
+        description: from yahoo finance
+      - name: sector
+        description: sector of that company
+      
+  - name: stg_financial_statement
+    desctiption: >
+      part of financial statement from 10k filing
+    columns:
+      - name: ticker
+        description: ticker from yahoo finance
+      - name: ebitda
+        description: ebitda from financial statement
+      - name: gross_profit
+        description: gross profit
+      - name: interest_expense
+        description: interest expense
+      - name: cost_of_revenue
+        description: cost of revenue
+      - name: total_revenue
+        description: total revenue
+  
+  - name: stg_cashflow
+    description: >
+      part of cashflow from 10k filing
+    columns:
+      - name: ticker
+        description: ticker from yahoo finance
+      - name: free_cash_flow
+        description: free cash flow
+      - name: issuance_of_debt
+        description: issuance of debt
