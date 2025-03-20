@@ -1,0 +1,108 @@
+id: get_stock_price
+namespace: edgar
+description: |
+    download stock price. if table exists, download stock price from max(date) + 1 to yesterday. 
+    if table not exists, download stock price from 2021/01/01.
+    tickers in csv file, loaded to bigquery. 
+
+
+variables:
+  gcs_price_file: "gs://{{kv('GCP_BUCKET_NAME')}}/stock_price/{{ outputs.update_stock_price.vars.price_start_date }}_price_file"
+  gcs_index_file: "gs://{{kv('GCP_BUCKET_NAME')}}/stock_price/{{ outputs.update_stock_price.vars.index_start_date }}_index_file"
+
+tasks:
+  - id: stock_price_schema
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+      CREATE TABLE IF NOT EXISTS `{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.stock_price`
+          (
+          date DATE OPTIONS (description = 'date of stock price'),
+          ticker STRING OPTIONS (description = 'stock ticker from yahoo finance'),
+          price FLOAT64 OPTIONS (description = 'adjuested close price')
+          )
+
+  - id: index_price_schema
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+      CREATE TABLE IF NOT EXISTS `{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.index_price`
+          (
+          date DATE OPTIONS (description = 'date of index price'),
+          ticker STRING OPTIONS (description = 'index ticker, replaced hat from yahoo finance ticker'),
+          price FLOAT64 OPTIONS (description = 'adjuested close price')
+          )
+
+  - id: get_price_start_date_in_table
+    type: io.kestra.plugin.gcp.bigquery.Query
+    fetchOne: true
+    sql: |
+      select coalesce(date_add(max(date), interval 1 day), '2023-01-01') as price_start_date
+      from `{{ kv('GCP_DATASET') }}.stock_price`
+
+  - id: get_index_start_date_in_table
+    type: io.kestra.plugin.gcp.bigquery.Query
+    fetchOne: true
+    sql: |
+      select coalesce(date_add(max(date), interval 1 day), '2023-01-01') as index_start_date
+      from `{{ kv('GCP_DATASET') }}.index_price`
+
+  - id: update_stock_price
+    type: io.kestra.plugin.scripts.python.Commands
+    namespaceFiles:
+      enabled: true
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+    containerImage: python:slim
+    warningOnStdErr: false
+    beforeCommands:
+      - pip install pandas yfinance kestra
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: '{{ kv("GCP_SERVICE_ACCOUNT") }}'
+    outputFiles:
+      - "*.csv"
+    commands:
+      - python update_stock_price.py {{ outputs.get_price_start_date_in_table["row"]["price_start_date"] }} {{ outputs.get_index_start_date_in_table["row"]["index_start_date"] }}
+  
+  - id: upload_price_csv_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.update_stock_price.outputFiles['stock_price.csv'] }}"
+    to: "{{ render(vars.gcs_price_file) }}"
+
+  - id: upload_index_csv_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.update_stock_price.outputFiles['index_price.csv'] }}"
+    to: "{{ render(vars.gcs_index_file) }}"
+
+  - id: update_stock_price_table
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+      LOAD DATA INTO `{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.stock_price`
+      FROM FILES (
+        format = 'CSV',
+        uris = ['{{ render(vars.gcs_price_file) }}']);
+
+  - id: update_index_price_table
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+      LOAD DATA INTO `{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.index_price`
+      FROM FILES (
+        format = 'CSV',
+        uris = ['{{ render(vars.gcs_index_file) }}']);
+
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: If you'd like to explore Kestra outputs, disable it.
+    disabled: false
+            
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_SERVICE_ACCOUNT')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+
+
+triggers:
+  - id: stock_price_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 16 1 

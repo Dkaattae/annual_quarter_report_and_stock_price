@@ -1,0 +1,26 @@
+id: xbrl_data
+namespace: edgar
+description: |
+    goal: download xbrl data from yfinance python library, a python interface of downloading financial data from yahoo finance.
+
+tasks:
+  - id: pipeline
+    type: io.kestra.plugin.scripts.python.Commands
+    namespaceFiles:
+      enabled: true
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+    containerImage: python:slim
+    warningOnStdErr: false
+    beforeCommands:
+      - pip install pandas yfinance "dlt[bigquery]" 
+      - pip install google-cloud-bigquery
+      - pip install google-cloud-bigquery-storage
+    env:
+      DESTINATION__BIGQUERY__CREDENTIALS: '{{ kv("GCP_SERVICE_ACCOUNT") }}'
+      DESTINATION__BIGQUERY__LOCATION: "{{ kv('GCP_LOCATION') }}"
+    commands:
+      - python xbrl_pipeline.py
+    disabled: false
+
+

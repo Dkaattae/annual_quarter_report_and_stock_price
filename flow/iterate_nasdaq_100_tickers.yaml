@@ -1,0 +1,47 @@
+id: iterate_nasdaq_100_tickers
+namespace: edgar
+
+tasks:
+  - id: extract
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+      CREATE OR REPLACE EXTERNAL TABLE `{{kv('GCP_DATASET')}}.nasdaq100List`
+          (
+              id INTEGER OPTIONS (description='identifier'),
+              Symbol STRING OPTIONS (description='ticker'),
+              Company_Name STRING OPTIONS (description='company name')
+          )
+          OPTIONS (
+              format = 'CSV',
+              uris = ['gs://edgar_company_submission_files/Nasdaq100List.csv'],
+              skip_leading_rows = 1,
+              ignore_unknown_values = TRUE
+            );
+      SELECT Symbol
+      from `{{kv('GCP_DATASET')}}.nasdaq100List`
+      where id > 50 and id < 55;
+    store: true
+
+  - id: each
+    type: io.kestra.plugin.core.flow.ForEachItem
+    items: "{{ outputs.extract.uri }}"
+    batch:
+      rows: 1
+    namespace: edgar
+    flowId: company_public_filling_business_section
+    wait: true # wait for the subflow execution
+    transmitFailed: true # fail the task run if the subflow execution fails
+    inputs:
+      ticker: "{{ taskrun.items }}" # special variable that contains the items of the batch
+      file_type: "10-K"
+      word_of_interest: 'AI'
+
+
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_SERVICE_ACCOUNT')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"

@@ -1,0 +1,98 @@
+id,Symbol,Company_Name
+1,AAPL,Apple Inc.
+2,MSFT,Microsoft Corporation
+3,NVDA,NVIDIA Corporation
+4,AMZN,"Amazon.com, Inc."
+5,GOOGL,Alphabet Inc.
+6,GOOG,Alphabet Inc.
+7,META,"Meta Platforms, Inc."
+8,AVGO,Broadcom Inc.
+9,TSLA,"Tesla, Inc."
+10,COST,Costco Wholesale Corporation
+11,NFLX,"Netflix, Inc."
+12,TMUS,"T-Mobile US, Inc."
+13,ASML,ASML Holding N.V.
+14,CSCO,"Cisco Systems, Inc."
+15,AZN,AstraZeneca PLC
+16,LIN,Linde plc
+17,PEP,"PepsiCo, Inc."
+18,ISRG,"Intuitive Surgical, Inc."
+19,PLTR,Palantir Technologies Inc.
+20,TXN,Texas Instruments Incorporated
+21,AMGN,Amgen Inc.
+22,QCOM,QUALCOMM Incorporated
+23,INTU,Intuit Inc.
+24,AMD,"Advanced Micro Devices, Inc."
+25,PDD,PDD Holdings Inc.
+26,GILD,"Gilead Sciences, Inc."
+27,HON,Honeywell International Inc.
+28,CMCSA,Comcast Corporation
+29,SBUX,Starbucks Corporation
+30,ADP,"Automatic Data Processing, Inc."
+31,ARM,Arm Holdings plc
+32,VRTX,Vertex Pharmaceuticals Incorporated
+33,AMAT,"Applied Materials, Inc."
+34,PANW,"Palo Alto Networks, Inc."
+35,ADI,"Analog Devices, Inc."
+36,APP,AppLovin Corporation
+37,MELI,"MercadoLibre, Inc."
+38,MU,"Micron Technology, Inc."
+39,LRCX,Lam Research Corporation
+40,CRWD,"CrowdStrike Holdings, Inc."
+41,KLAC,KLA Corporation
+42,INTC,Intel Corporation
+43,ABNB,"Airbnb, Inc."
+44,MDLZ,"Mondelez International, Inc."
+45,CTAS,Cintas Corporation
+46,FTNT,"Fortinet, Inc."
+47,DASH,"DoorDash, Inc."
+48,ORLY,"O'Reilly Automotive, Inc."
+49,MAR,"Marriott International, Inc."
+50,MRVL,"Marvell Technology, Inc."
+51,REGN,"Regeneron Pharmaceuticals, Inc."
+52,CEG,Constellation Energy Corporation
+53,TEAM,Atlassian Corporation
+54,SNPS,"Synopsys, Inc."
+55,WDAY,"Workday, Inc."
+56,PYPL,"PayPal Holdings, Inc."
+57,CDNS,"Cadence Design Systems, Inc."
+58,MSTR,MicroStrategy Incorporated
+59,ROP,"Roper Technologies, Inc."
+60,CSX,CSX Corporation
+61,CHTR,"Charter Communications, Inc."
+62,AEP,"American Electric Power Company, Inc."
+63,ADSK,"Autodesk, Inc."
+64,PAYX,"Paychex, Inc."
+65,NXPI,NXP Semiconductors N.V.
+66,MNST,Monster Beverage Corporation
+67,PCAR,PACCAR Inc
+68,CPRT,"Copart, Inc."
+69,KDP,Keurig Dr Pepper Inc.
+70,ROST,"Ross Stores, Inc."
+71,EXC,Exelon Corporation
+72,FAST,Fastenal Company
+73,VRSK,"Verisk Analytics, Inc."
+74,BKR,Baker Hughes Company
+75,LULU,Lululemon Athletica Inc.
+76,CTSH,Cognizant Technology Solutions Corporation
+77,XEL,Xcel Energy Inc.
+78,CCEP,Coca-Cola Europacific Partners PLC
+79,AXON,"Axon Enterprise, Inc."
+80,DDOG,"Datadog, Inc."
+81,GEHC,GE HealthCare Technologies Inc.
+82,KHC,The Kraft Heinz Company
+83,ODFL,"Old Dominion Freight Line, Inc."
+84,TTWO,"Take-Two Interactive Software, Inc."
+85,IDXX,"IDEXX Laboratories, Inc."
+86,EA,Electronic Arts Inc.
+87,TTD,"The Trade Desk, Inc."
+88,DXCM,"DexCom, Inc."
+89,MCHP,Microchip Technology Incorporated
+90,CSGP,"CoStar Group, Inc."
+91,ZS,"Zscaler, Inc."
+92,ANSS,"ANSYS, Inc."
+93,WBD,"Warner Bros. Discovery, Inc."
+94,CDW,CDW Corporation
+95,GFS,GlobalFoundries Inc.
+96,ON,ON Semiconductor Corporation
+97,MDB,"MongoDB, Inc."
