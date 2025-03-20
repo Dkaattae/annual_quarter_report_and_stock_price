@@ -16,6 +16,7 @@ bind mount the repo folder to kestra so that it could see the code and files nee
 or you can manually import all files from code folder and file folder to kestra.
 
 step 1, setup google cloud information as in the vedio. 
+    flow gcp_ kv and gcp_setup are not uploaded in this repo. 
 step 2, run update_stock_price_schedule.yaml in kestra. 
     the flow will update stock adjusted close price from yahoo finance for nasdaq 100 companies. scheduled monthly
 step 3, run xbrl_pipeline.yaml in kestra.
@@ -28,7 +29,7 @@ step 4, run company_public_filing_business_section.yaml in kestra.
             will be updated to extract from pure text.
         3, this is expandable to 10q file, md&a part. will be updated to include that.
 step 5, iterate all tickers from nasdaq companies
-    the flow will iterate over tickers read from nasdaq100.csv file.
+    the flow will iterate over tickers read from nasdaq100.csv file as input and run subflow company_public_filing_business_section
     if CPU consumption is overwhelming, run in chunk
 further step, add scripts to extract other word of interest from 10K business section. 
 
