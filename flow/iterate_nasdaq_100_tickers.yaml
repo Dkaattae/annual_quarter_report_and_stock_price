@@ -19,7 +19,7 @@ tasks:
             );
       SELECT Symbol
       from `{{kv('GCP_DATASET')}}.nasdaq100List`
-      where id > 50 and id < 55;
+      # where id > 50 and id < 55;
     store: true
 
   - id: each
@@ -28,7 +28,7 @@ tasks:
     batch:
       rows: 1
     namespace: edgar
-    flowId: company_public_filling_business_section
+    flowId: company_public_filing_business_section
     wait: true # wait for the subflow execution
     transmitFailed: true # fail the task run if the subflow execution fails
     inputs:
