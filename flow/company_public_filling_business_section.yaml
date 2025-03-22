@@ -1,4 +1,4 @@
-id: company_public_filling_business_section
+id: company_public_filing_business_section
 namespace: edgar
 description: |
   the goal is to extract business section from 10K files of NASDAQ 100 companies.
@@ -10,8 +10,9 @@ description: |
   step6, request document text, return full document in html
   step7, find business section, return url with href. 
   step8, extract text between item1 business to item 1A risk factor. save txt file
-  step9, put extract txt file into data lake
-  step10, get word count from txt file
+  step9, get total word count from txt file
+  step10, if total word count is bigger than 0, put extract txt file into data lake
+
 
 inputs:
   - id: ticker
@@ -25,14 +26,9 @@ inputs:
     values: ["10-K", "10-Q", "8-K"]
     defaults: "10-K"
 
-  - id: word_of_interest
-    type: STRING
-    displayName: "word of interest"
-    defaults: "AI"
-
 variables:
   submission_file: "CIK{{ outputs.get_cik.vars.CIK }}.json"
-  business_section_file: "{{inputs.ticker}}_{{inputs.file_type}}_business_section.txt"
+  business_section_file: "{{inputs.ticker}}_{{inputs.file_type}}_{{outputs.get_business_section.vars.last_modified_date}}_business_section.txt"
   gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/business_section/{{vars.business_section_file}}"
   business_section_data: "{{ outputs.get_business_section.outputFiles[inputs.ticker ~ '_' ~ inputs.file_type ~ '_business_section.txt'] }}"
 
@@ -42,6 +38,10 @@ tasks:
     labels:
       file_type: "{{inputs.file_type}}"
       ticker: "{{inputs.ticker}}"
+
+  - id: log_inputs
+    type: io.kestra.plugin.core.log.Log
+    message: "{{ inputs.ticker }}"
 
   # step 1
   - id: get_cik
@@ -66,6 +66,8 @@ tasks:
     contentType: application/json
     headers:
       User-Agent: xchencws@citibank.com
+    disabled: false
+
   - id: print_output_file_uri
     type: io.kestra.plugin.core.log.Log
     message: "{{ outputs.extract.uri }}"
@@ -77,6 +79,7 @@ tasks:
     type: io.kestra.plugin.gcp.gcs.Upload
     from: "{{ outputs.extract.uri }}"
     to: "gs://{{kv('GCP_BUCKET_NAME')}}/submission_file/CIK{{ outputs.get_cik.vars.CIK }}.json"
+    disabled: false
   
   # step 3-8
   - id: get_business_section
@@ -94,7 +97,7 @@ tasks:
     outputFiles:
       - "*.txt"
     commands:
-      - python business_overview_v3.py "{{ outputs.get_cik.vars.CIK }}" "{{ inputs.ticker}}" "{{ inputs.file_type}}" "{{ outputs.extract.uri }}" "{{ inputs.word_of_interest}}"
+      - python business_overview_v3.py "{{ outputs.get_cik.vars.CIK }}" "{{ inputs.ticker}}" "{{ inputs.file_type}}" "{{ outputs.extract.uri }}"
     disabled: false
 
   - id: if_business_section_exists
@@ -116,24 +119,28 @@ tasks:
             filename STRING OPTIONS (description = 'business section file name'),
             last_modified_date TIMESTAMP OPTIONS (description = 'file last modified date'),
             total_word_count INTEGER OPTIONS (description = 'count of total word in file'),
+            word_of_interest STRING OPTIONS (description = 'word of interest through input'),
             word_of_interest_count INTEGER OPTIONS (description = 'count word of interest in file')
             )
+      disabled: true
 
     # step 10
     - id: business_section_word_count_table
       type: io.kestra.plugin.gcp.bigquery.Query
       sql: |
-        INSERT `{{kv('GCP_DATASET')}}.file_word_count` (row_id, filename, last_modified_date, total_word_count, word_of_interest_count)
+        INSERT `{{kv('GCP_DATASET')}}.file_word_count` (row_id, filename, last_modified_date, total_word_count, word_of_interest, word_of_interest_count)
         WITH staging_row as (
             SELECT
                 md5(concat("{{ render(vars.business_section_file) }}", "{{outputs.get_business_section.vars.last_modified_date}}")) as row_id,
                 "{{ render(vars.business_section_file) }}" as filename, 
                 timestamp("{{outputs.get_business_section.vars.last_modified_date}}") as last_modified_date,
                 {{outputs.get_business_section.vars.total_word_count}} as total_word_count, 
+                "{{inputs.word_of_interest}}" as word_of_interest,
                 {{outputs.get_business_section.vars.interest_word_count}} as word_of_interest_count)
             SELECT * FROM staging_row WHERE NOT EXISTS (
                 SELECT * FROM `{{kv('GCP_DATASET')}}.file_word_count` t WHERE t.row_id = staging_row.row_id
             )
+      disabled: true
   
   - id: purge_files
     type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
@@ -147,4 +154,6 @@ pluginDefaults:
       projectId: "{{kv('GCP_PROJECT_ID')}}"
       location: "{{kv('GCP_LOCATION')}}"
       bucket: "{{kv('GCP_BUCKET_NAME')}}"
+
+
 

@@ -50,4 +50,7 @@ if __name__ == "__main__":
     price_data = download_stock_price(price_start, current_date)
     index_data = download_index_price(index_start, current_date)
     outputs = {
-        'price_start_date': price_data
+        'price_start_date': price_data,
+        'index_start_date': index_data
+    }
+    Kestra.outputs(outputs)

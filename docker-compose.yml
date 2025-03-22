@@ -3,15 +3,12 @@ volumes:
     driver: local
   kestra-data:
     driver: local
-  postgres-nytaxi:
-    driver: local
 
 services:
   postgres:
     image: postgres
-    container_name: postgres-db
     volumes:
-      - "postgres-data:/var/lib/postgresql/data"
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: kestra
       POSTGRES_USER: kestra
@@ -21,7 +18,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 10
-
+      
   kestra:
     image: kestra/kestra:latest
     pull_policy: always
@@ -34,6 +31,7 @@ services:
       - kestra-data:/app/storage
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/kestra-wd:/tmp/kestra-wd
+      - /Documents/Github/annual_quarter_report_and_stock_price
     environment:
       KESTRA_CONFIGURATION: |
         datasources:
@@ -67,32 +65,6 @@ services:
       postgres:
         condition: service_started
     env_file: .env_encoded
-
-
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
-      - PGADMIN_DEFAULT_PASSWORD=admin
-    networks:
-      - default
-    ports:
-      - "5050:80"
-    depends_on:
-      postgres:
-        condition: service_started
-
-  postgres_nytaxi:
-    image: postgres:17-alpine
-    container_name: postgres-nytaxi
-    volumes:
-      - "postgres-nytaxi:/var/lib/postgresql/data"
-    environment:
-      POSTGRES_DB: ny_taxi
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-    ports:
-      - "5432:5432"
     
 
 networks:
