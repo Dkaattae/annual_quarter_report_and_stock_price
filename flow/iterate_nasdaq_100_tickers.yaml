@@ -34,7 +34,6 @@ tasks:
     inputs:
       ticker: "{{ taskrun.items }}" # special variable that contains the items of the batch
       file_type: "10-K"
-      word_of_interest: 'AI'
 
 
 

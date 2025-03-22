@@ -47,7 +47,7 @@ def count_word_in_file(filepath, word):
 
 
 
-def get_business_section(CIK, ticker, file_type, submission_file, word_of_interest):
+def get_business_section(CIK, ticker, file_type, submission_file):
     headers = {
             'User-Agent': 'xchencws@citibank.com',  # Replace with your details
             'Accept-Encoding': 'application/json',
@@ -153,9 +153,9 @@ def get_business_section(CIK, ticker, file_type, submission_file, word_of_intere
     print("Section content extracted successfully.")
 
     total_word_count = count_words(filename)
-    interest_word_count = count_word_in_file(filename, word_of_interest)
+    # interest_word_count = count_word_in_file(filename, word_of_interest)
 
-    return (last_modified_date, total_word_count, interest_word_count)
+    return (last_modified_date, total_word_count)
 
 
 if __name__ == "__main__":
@@ -163,7 +163,6 @@ if __name__ == "__main__":
     output_data = get_business_section(*input_data)
     outputs = {
         'last_modified_date': output_data[0],
-        'total_word_count': output_data[1],
-        'interest_word_count': output_data[2]
+        'total_word_count': output_data[1]
     }
     Kestra.outputs(outputs)
