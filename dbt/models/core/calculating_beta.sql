@@ -4,43 +4,42 @@
     )
 }}
 
-with stock_return as (
+with stock_return_in_range as (
     select *
-    from {{ ref('stg_stock_price') }}
+    from {{ ref('stg_stock_return') }}
     where date >= '2024-01-01'
         and date < '2025-01-01'
 ),
-index_return as (
+index_return_in_range as (
     select *
-    from {{ ref('stg_index_price') }}
+    from {{ ref('stg_index_return') }}
     where date >= '2024-01-01'
         and date < '2025-01-01'
 ),
 average_stock_return as (
     select ticker, avg(stock_return) as avg_stock_return
-    from stock_return
+    from stock_return_in_range
     group by ticker
 ),
 average_index_return as (
-    select avg(index_return) as average_index_return
-    from index_return
+    select avg(index_return) as avg_index_return
+    from index_return_in_range
 ),
 stock_deviation_return as (
     select 
-        stock_return.ticker,
-        stock_return.date,
-        stock_return.return - avg_stock_return as stock_return_dev
-    from stock_return
+        stock_return_in_range.ticker,
+        stock_return_in_range.date,
+        stock_return_in_range.stock_return - avg_stock_return as stock_return_dev
+    from stock_return_in_range
     left outer join average_stock_return
-        on stock_return.ticker = average_stock_return.ticker
+        on stock_return_in_range.ticker = average_stock_return.ticker
 ),
 index_deviation_return as (
     select 
-        index_return.date,
-        index_return.return - avg_index_return as stock_index_dev
-    from index_return
-    left outer join average_index_return
-        on index_return.ticker = average_index_return.ticker
+        index_return_in_range.date,
+        index_return_in_range.index_return - avg_index_return as index_return_dev
+    from index_return_in_range
+    cross join average_index_return
 )
 select 
     stock_deviation_return.ticker,
