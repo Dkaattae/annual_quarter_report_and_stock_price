@@ -1,5 +1,7 @@
 **steps**
-> 1, grant google service account storage, bigquery admin, dataproc admin roles. enable dataproc API
+> 1, grant roles
+
+storage admin, compute storage admin, bigquery admin, dataproc admin roles. enable dataproc API
 
 > 2, `terraform init`
 
