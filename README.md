@@ -9,13 +9,15 @@ Note: this is an expandable project.
 
 ## terraform   
 setup google cloud storage and bigquery dataset.   
+in dataproc.tf, setup a temp bucket for dataproc and dataproc cluster. 
+granting roles to service account is required. 
 
 ```
 terraform init
-terraform plan -var="credentials=~/.gcp/credentials/credentials.json"
-terraform apply -var="credentials=~/.gcp/credentials/credentials.json"
+terraform plan
+terraform apply
 ```
-replace path of google cloud credential in var.   
+type in credential path when prompt
 
 
 ## kestra
@@ -39,8 +41,8 @@ if you put google cloud credentials in kv store, delete this line.
 
     
 this line is for mounting the repo folder to kestra so that it could see the code and files needed.    
-replace this line with your folder, 
-or you can manually import all files from code folder and file folder to kestra.
+delete this line, 
+you can manually import all files from code folder and file folder to kestra.
 
 `docker-compose up`   
 in root folder
