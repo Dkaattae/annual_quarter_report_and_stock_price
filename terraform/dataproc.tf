@@ -4,7 +4,7 @@ resource "google_storage_bucket" "dataproc_staging" {
 
   lifecycle_rule {
     action {
-      type = 'Delete'
+      type = "Delete"
     }
     condition {
       age = 7
