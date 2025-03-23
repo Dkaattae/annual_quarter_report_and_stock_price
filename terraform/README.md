@@ -1,3 +1,12 @@
+**overview** 
+
+4 resources in terraform:   
+storage bucket to store files   
+bigquery dataset   
+temp storage bucket for dataproc   
+dataproc cluster   
+
+
 **steps**
 > 1, grant roles
 
