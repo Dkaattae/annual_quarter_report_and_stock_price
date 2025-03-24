@@ -18,12 +18,11 @@ input_business_section = args.input_business_section
 output = args.output
 
 spark = SparkSession.builder \
-    .config("spark.jars", "gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.42.0.jar") \
     .appName('WordCountPerFile') \
     .getOrCreate()
 
 words_to_count = {"AI", "restructuring", "sustainability"}
-rdd = spark.sparkContext.wholeTextFiles(concat(input_business_section, '/*.txt'))
+rdd = spark.sparkContext.wholeTextFiles(input_business_section)
 def count_words(file_content):
     filename, content = file_content
     parts = filename.split("/")[-1].split("_")  # Extract filename and split
@@ -57,10 +56,13 @@ df = df.withColumn("id", md5(concat_ws("_", col("file_name"), col("file_date"), 
 # Rearrange columns
 df = df.select("id", "file_name", "file_date", "total_word_count", "word", "word_count")
 
-word_counts_df.write.mode("overwrite").parquet(output_path)
+# df.write.mode("overwrite").parquet(output_path)
 
-df_result.write.format('bigquery') \
-    .option('table', output) \
+df.write \
+    .format("bigquery") \
+    .option("table", output) \
+    .option("temporaryGcsBucket", "dataproc-temp-us-central1-504833768629-treni0an") \
+    .mode("append") \
     .save()
 
 spark.stop()
