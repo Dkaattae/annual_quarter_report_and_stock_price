@@ -15,7 +15,7 @@ variable "region" {
 
 variable "location" {
 	description = "Project Location"
-	default = "US"
+	default = "us-central1"
 }
 
 variable "bq_dataset_name" {
