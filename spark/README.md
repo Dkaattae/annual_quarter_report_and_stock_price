@@ -5,11 +5,11 @@ grant dataproc service account roles: dataproc worker
 
 2, load pyspark code into google cloud storage
 
-3, submit job, put code uri into main py file and folder uri, dataset.table as arguments  
+3, submit job, put code uri into main py file and folder uri, project.dataset.table as arguments  
 or submit job through gcloud CLI
 ```
 gs://edgar_company_submission_files/code/count_words_in_file.py \
 -- \
     --input_business_section=gs://edgar_company_submission_files/business_section/* \
-    --output=edgar_data.business_section_word_count
+    --output=Edgar-data-pipeline.edgar_data.business_section_word_count
 ```
