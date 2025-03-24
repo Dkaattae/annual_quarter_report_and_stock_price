@@ -14,7 +14,3 @@ select
     ticker, date, price, yesterday_price,
     (price - yesterday_price) / yesterday_price as index_return
 from yesterday_index_price
-
-{% if var('is_test_run', default=true) %}
-    limit 100
-{% endif %}

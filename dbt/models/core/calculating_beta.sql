@@ -40,11 +40,21 @@ index_deviation_return as (
         index_return_in_range.index_return - avg_index_return as index_return_dev
     from index_return_in_range
     cross join average_index_return
-)
+),
+find_beta as (
 select 
     stock_deviation_return.ticker,
-    sum(stock_return_dev*index_return_dev) / sum(index_return_dev*index_return_dev) as beta
+    sum(stock_return_dev*index_return_dev) / sum(index_return_dev*index_return_dev) as beta,
 from stock_deviation_return
 left outer join index_deviation_return
     on stock_deviation_return.date = index_deviation_return.date
 group by stock_deviation_return.ticker
+)
+select
+    find_beta.ticker,
+    beta,
+    avg_stock_return - avg_index_return * beta as alpha
+from find_beta
+cross join average_index_return
+left outer join average_stock_return
+    on find_beta.ticker = average_stock_return.ticker

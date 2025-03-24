@@ -11,6 +11,7 @@ sources:
       - name: financial_statement
       - name: cashflow
       - name: balance_sheet
+      - name: business_section_word_count
 
 models:
   - name: stg_stock_return
@@ -105,3 +106,18 @@ models:
         description: total equity
       - name: total_liabilities_net_minority_interest
         description: total liabilities
+
+  - name: stg_word_count
+    description: >
+      extracting item 1 business section from 10K file and count the buzz word
+    columns:
+      - name: ticker
+        description: stock ticker
+      - name: file_date
+        description: 10k file approved date
+      - name: total_word_count
+        description: total word count in item 1 business section
+      - name: word
+        description: buzz word
+      - name: word_count
+        description: buzz word count

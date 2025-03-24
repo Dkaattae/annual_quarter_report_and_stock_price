@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: calculating_beta
+    description: >
+      calculating stock beta from stock return and index return in 2024
+    columns:
+      - name: ticker
+        description: ticker from yahoo finance
+      - name: beta
+        description: beta of stock return in 2024
+      - name: alpha
+        description: alpha of stock return in 2024
+  
+  - name: stock_return_quantile
+    description: >
+      calculating stock return 90,50,10 percentile by date
+    columns:
+      - name: date
+        description: stock return date
+      - name: return_percentile_90
+        description: 90 percentile return in nasdaq 100 companies
+      - name: return_percentile_50
+        description: 50 percentile return in nasdaq 100 companies
+      - name: return_percentile_10
+        description: 10 percentile return in nasdaq 100 companies
+
+  - name: beta_by_sector
+    description: >
+      join stock beta with company sector
+    columns:
+      - name: ticker
+      - name: beta
+      - name: sector
