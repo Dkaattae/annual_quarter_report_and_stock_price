@@ -7,3 +7,9 @@ grant dataproc service account roles: dataproc worker
 
 3, submit job, put code uri into main py file and folder uri, dataset.table as arguments  
 or submit job through gcloud CLI
+```
+gs://edgar_company_submission_files/code/count_words_in_file.py \
+-- \
+    --input_business_section=gs://edgar_company_submission_files/business_section/* \
+    --output=edgar_data.business_section_word_count
+```
