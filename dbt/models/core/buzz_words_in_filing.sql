@@ -20,20 +20,33 @@ stock_beta as (
     select *
     from {{ ref('calculating_beta') }}
 ),
-buzz_word_and_return as (
+next_trading_day_after_filing as (
     select 
         buzzword_count.ticker, 
         buzzword_count.filedate, 
-        word, 
-        word_count, 
-        stock_return, 
-        index_return
+        max(daily_index_return.date) as next_trading_day
     from buzzword_count
-    left outer join daily_stock_return
-        on buzzword_count.ticker = daily_stock_return.ticker
-        and buzzword_count.filedate = daily_stock_return.date
     left outer join daily_index_return
-        on buzzword_count.filedate = daily_index_return.date
+        on buzzword_count.filedate < daily_index_return.date
+    group by buzzword_count.ticker, buzzword_count.filedate
+),
+buzz_word_and_return as (
+    select
+        buzzword_count.ticker, 
+        buzzword_count.filedate,
+        word,
+        word_count,
+        stock_return,
+        index_return
+    from next_trading_day_after_filing
+    left outer join buzzword_count
+        on next_trading_day_after_filing.ticker = buzzword_count.ticker
+        and next_trading_day_after_filing.filedate = buzzword_count.filedate
+    left outer join daily_index_return
+        on next_trading_day_after_filing.next_trading_day = daily_index_return.date
+    left outer join daily_stock_return
+        on next_trading_day_after_filing.ticker = daily_stock_return.ticker
+        and next_trading_day_after_filing.next_trading_day = daily_stock_return.date
 )
 select 
     buzz_word_and_return.ticker,
