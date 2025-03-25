@@ -24,7 +24,7 @@ next_trading_day_after_filing as (
     select 
         buzzword_count.ticker, 
         buzzword_count.filedate, 
-        max(daily_index_return.date) as next_trading_day
+        min(daily_index_return.date) as next_trading_day
     from buzzword_count
     left outer join daily_index_return
         on buzzword_count.filedate < daily_index_return.date
