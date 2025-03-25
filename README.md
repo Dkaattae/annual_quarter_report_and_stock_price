@@ -65,15 +65,15 @@ the flow will load xbrl data from yahoo finance to bigquery tables.
     
 > *step 4, run company_public_filing_business_section.yaml in kestra.*  
 
-in file business_overview_v3.py an file public_company_filing_business_section.yaml, please change the header to your information.  
+in file business_overview_v3.py and file public_company_filing_business_section.yaml, please change the header to your information.  
 
-the flow will ask input of ticker, file type. code to extract recent 10-K file has been uploaed here. 10-Q file is under development, will be updated. and older 10-K/10-Q file may be updated to include. 
+the flow will ask input of ticker, file type. this flow will extract item 1 business section from recent 10-K file. 10-Q file is under development, will be updated. and older 10-K/10-Q file may be updated to include. 
 
 there are some useless code about counting word of interest which is disabled. will count words in pyspark.     
 
 Note: 1, there are some companies that do not have 10K filings because they are foriegn companies.    
 
-2, there are a few companies, their filing does not include index in html. I ignore thoes companies for now.    
+2, there are a few companies, their filing does not include index in html. I ignore those companies for now.    
 will be updated to extract from pure text.   
 
 3, this is expandable to 10q file, md&a part. will be updated to include that.   
@@ -109,4 +109,8 @@ and put the following input into console.
 --output=<your_dataset>.<your_table>
 ```
 
-note: no need to put jar file to run pyspark-bigquery. 
+note: no need to put jar file to run pyspark-bigquery.    
+
+## report
+
+[looker studio report](https://lookerstudio.google.com/embed/reporting/314d368e-4ed1-495e-b4d4-f6e63ca9b898/page/tEnnC)
