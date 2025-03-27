@@ -85,6 +85,10 @@ the flow will iterate over tickers read from nasdaq100.csv file as input and run
 
 if CPU consumption is overwhelming, run in chunk   
 
+> *step 6, running dbt in flow.*
+  
+running dbt in kestra
+
 ## dlt
 xbrl_pipeline.yaml running xbrl_pipeline.py which using dlt to load data from yahoo finance api to bigquery tables. 
 
