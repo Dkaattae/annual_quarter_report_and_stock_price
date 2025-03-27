@@ -2,14 +2,16 @@ version: 2
 
 sources:
   - name: staging
-    database: "{{ env_var('DBT_DATABASE'), 'edgar-data-pipeline'}}"
-    schema: "{{ env_var('DBT_SCHEMA', 'edgar_data')}}"
+    database: "{{ env_var('DBT_DATABASE', 'edgar-data-pipeline') }}"
+    schema: "{{ env_var('DBT_SCHEMA', 'edgar_data') }}"
     tables:
       - name: stock_price
       - name: index_price
       - name: company_info
       - name: financial_statement
       - name: cashflow
+      - name: balance_sheet
+      - name: business_section_word_count
 
 models:
   - name: stg_stock_return
@@ -91,3 +93,31 @@ models:
         description: free cash flow
       - name: issuance_of_debt
         description: issuance of debt
+
+  - name: stg_balance_sheet
+    description: >
+      part of balance sheet from 10k filing
+    columns:
+      - name: ticker
+        description: ticker from yahoo finance
+      - name: total_debt
+        description: total debt
+      - name: total_equity_gross_minority_interest
+        description: total equity
+      - name: total_liabilities_net_minority_interest
+        description: total liabilities
+
+  - name: stg_word_count
+    description: >
+      extracting item 1 business section from 10K file and count the buzz word
+    columns:
+      - name: ticker
+        description: stock ticker
+      - name: file_date
+        description: 10k file approved date
+      - name: total_word_count
+        description: total word count in item 1 business section
+      - name: word
+        description: buzz word
+      - name: word_count
+        description: buzz word count

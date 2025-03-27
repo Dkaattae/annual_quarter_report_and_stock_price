@@ -2,7 +2,12 @@
 
 2, setup google cloud 
 
-3, change the header information in code and upload files and code in kestra
+3, change the header information in code and upload files and code in kestra   
+business_overview_v3.py: line 52 - 54   
+company_public_filing_business_section.yaml: line 68   
+change header information to yours as SEC required.   
+Note: personal email address may not work. if not try random company instead.    
+(i have no relationship with citibank. )
 
 4, run flow
 

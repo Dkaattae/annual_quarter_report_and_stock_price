@@ -5,5 +5,5 @@
 }}
 
 select 
-    ticker, free_cash_flow, issuance_of_debt
-from {{source('staging', 'financial_statement')}}
+    ticker, index, free_cash_flow, issuance_of_debt
+from {{source('staging', 'cashflow')}}
