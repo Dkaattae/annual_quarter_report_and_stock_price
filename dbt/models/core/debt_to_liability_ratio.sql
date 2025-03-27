@@ -37,5 +37,5 @@ from ratio_and_sector
 select
     reporting_year, sector, any_value(debt_2liabilites_ratio_median) as debt_to_liabilites_ratio_median
 from cal_ratio_median
-group by reporting_year, sector
 where debt_2liabilites_ratio_median is not null
+group by reporting_year, sector
