@@ -91,7 +91,9 @@ xbrl_pipeline.yaml running xbrl_pipeline.py which using dlt to load data from ya
 dlt help me to flatten the json format into table. 
 
 ## dbt
-see dbt folder   
+lineage   
+<img width="497" alt="Screenshot 2025-03-24 at 10 18 58 PM" src="https://github.com/user-attachments/assets/9c740f80-e372-4093-87ec-635c2b9d14a7" />
+
 
 ## spark   
 in spark folder, there is a py script to count words in business_section file and write to bigquery. 
