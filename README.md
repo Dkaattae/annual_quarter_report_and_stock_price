@@ -15,7 +15,8 @@ This is an expandable project. later on, i will learn more from MLops and LLMops
 ## terraform   
 setup google cloud storage and bigquery dataset.   
 in dataproc.tf, setup a temp bucket for dataproc and dataproc cluster. 
-granting roles to service account is required. 
+granting roles to service account is required.    
+see terraform folder, listed roles need to be granted.   
 
 ```
 terraform init
@@ -100,6 +101,7 @@ xbrl_pipeline.yaml running xbrl_pipeline.py which using dlt to load data from ya
 dlt help me to flatten the json format into table. 
 
 ## dbt
+details in dbt folder.   
 lineage   
 <img width="497" alt="Screenshot 2025-03-24 at 10 18 58 PM" src="https://github.com/user-attachments/assets/9c740f80-e372-4093-87ec-635c2b9d14a7" />
 
