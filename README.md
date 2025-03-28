@@ -1,6 +1,11 @@
 # 10K/10Q filings and stock price
 
-Note: this is an expandable project. 
+## problem definition   
+When i worked in financial industries, almost all of the data pipeline was in excel. data loading is from bloomberg API, data transforming is in excel.    
+This was very messy, it took me a lot of time to just download the data, and manually download files from SEC website to put in the right folder.    
+After I learned techniques through data engineering course, now i can automate the whole thing, even schedule to download stock data, xbrl and 10K/10Q files.   
+no more excel, no more messy steps, and it is free (GCP does cost some money if pass free trial), no bloomberg.   
+This is an expandable project. later on, i will learn more from MLops and LLMops courses, i can apply all that techniques using this data pipeline. 
 
 ## overview   
 <img width="892" alt="Screenshot 2025-03-22 at 3 40 09 PM" src="https://github.com/user-attachments/assets/7479d356-8b55-4dcf-95e8-9f022b85eca1" />
